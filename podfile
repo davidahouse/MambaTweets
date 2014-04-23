@@ -1,0 +1,5 @@
+platform :ios, '7.0'
+
+inhibit_all_warnings!
+
+pod 'MambaStore', :git => 'https://github.com/davidahouse/MambaStore.git'
