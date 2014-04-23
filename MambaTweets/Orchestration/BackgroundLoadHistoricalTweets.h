@@ -6,15 +6,12 @@
 //  Copyright (c) 2014 randomaccident. All rights reserved.
 //
 
-#import "RAOrchestration.h"
+#import "RAJobController.h"
 #import <Accounts/Accounts.h>
 
 @class TwitterAccount;
 
-@interface BackgroundLoadHistoricalTweets : RAOrchestration
-
-#pragma mark - Class methods
-+ (void)startWithAccountStore:(ACAccountStore *)accountStore account:(TwitterAccount *)twitterAccount;
+@interface BackgroundLoadHistoricalTweets : RAJobController
 
 #pragma mark - Initializer
 - (id)initWithAccountStore:(ACAccountStore *)accountStore account:(TwitterAccount *)twitterAccount;

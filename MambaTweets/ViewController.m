@@ -15,6 +15,7 @@
 #pragma mark - Properties
 @property (nonatomic,strong) TwitterAccount *account;
 @property (nonatomic,assign) BOOL isRefreshing;
+@property (nonatomic,strong) RefreshTimeline *refreshJob;
 
 #pragma mark - IBOutlet
 @property (weak, nonatomic) IBOutlet UIImageView *twitterIcon;
@@ -37,26 +38,12 @@
 {
     [super viewDidLoad];
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:(NSString *)kTimelineNotAuthorizedNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        
-        NSLog(@"got a not authorized notification!");
-    }];
-
     [[NSNotificationCenter defaultCenter] addObserverForName:(NSString *)kTimelineSummaryNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
         
-        [self reloadAccountData];
-        
         NSLog(@"got a summary notification!");
+        [self reloadAccountData];
     }];
-    
-    [[NSNotificationCenter defaultCenter] addObserverForName:(NSString *)kTimelineFinishedNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-    
-        NSLog(@"refresh finished");
-        self.isRefreshing = NO;
-        [self.refreshActivity stopAnimating];
-        [self.refreshButton setTitle:@"Refresh" forState:UIControlStateNormal];
-    }];
-    
+
     [[NSNotificationCenter defaultCenter] addObserverForName:(NSString *)kIconFinishedDownloadNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
         
         [self refreshUI];
@@ -66,10 +53,7 @@
     [self reloadAccountData];
     
     // Kick off an initial refresh
-    self.isRefreshing = YES;
-    [self.refreshButton setTitle:@"Cancel" forState:UIControlStateNormal];
-    [self.refreshActivity startAnimating];
-    [RefreshTimeline startRefresh];
+    [self startBackgroundRefresh];
 }
 
 - (void)didReceiveMemoryWarning
@@ -110,7 +94,8 @@
     if ( self.isRefreshing ) {
         // actually this is a cancel!
         self.isRefreshing = NO;
-        [RefreshTimeline cancelOrchestration];
+        [self.refreshJob cancel];
+        self.refreshJob = nil;
         [self.refreshActivity stopAnimating];
         [self.refreshButton setTitle:@"Refresh" forState:UIControlStateNormal];
     }
@@ -119,8 +104,33 @@
         self.isRefreshing = YES;
         [self.refreshButton setTitle:@"Cancel" forState:UIControlStateNormal];
         [self.refreshActivity startAnimating];
-        [RefreshTimeline startRefresh];
+        [self startBackgroundRefresh];
     }
+}
+
+- (void)startBackgroundRefresh
+{
+    self.isRefreshing = YES;
+    [self.refreshButton setTitle:@"Cancel" forState:UIControlStateNormal];
+    [self.refreshActivity startAnimating];
+    self.refreshJob = [[RefreshTimeline alloc] init];
+    __weak id weakself = self;
+    [self.refreshJob setCompletionBlock:^{
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakself backgroundRefreshFinished];
+        });
+    }];
+    [self.refreshJob startJob];
+}
+
+- (void)backgroundRefreshFinished
+{
+    NSLog(@"refresh finished");
+    self.isRefreshing = NO;
+    [self.refreshActivity stopAnimating];
+    [self.refreshButton setTitle:@"Refresh" forState:UIControlStateNormal];
+    self.refreshJob = nil;
 }
 
 @end

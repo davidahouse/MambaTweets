@@ -32,8 +32,8 @@
 		946F048918FC238300BC5D3C /* LoadOrCreateTwitterAccountModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 946F048818FC238300BC5D3C /* LoadOrCreateTwitterAccountModel.m */; };
 		946F048C18FC261B00BC5D3C /* TwitterInitialUserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 946F048B18FC261B00BC5D3C /* TwitterInitialUserInfo.m */; };
 		946F048F18FC54D100BC5D3C /* LoadTweetSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = 946F048E18FC54D100BC5D3C /* LoadTweetSummary.m */; };
-		94AAA1F718FABCAF004FF8C3 /* RAOrchestration.m in Sources */ = {isa = PBXBuildFile; fileRef = 94AAA1F618FABCAF004FF8C3 /* RAOrchestration.m */; };
 		94AAA1FA18FB040F004FF8C3 /* ParseAndStoreTweet.m in Sources */ = {isa = PBXBuildFile; fileRef = 94AAA1F918FB040F004FF8C3 /* ParseAndStoreTweet.m */; };
+		94BCB45619083AEF000F1632 /* RAJobController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94BCB45519083AEF000F1632 /* RAJobController.m */; };
 		D3DDE9F73FD14FDE99A270BC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF17C809D5F74EE0803F4077 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -88,10 +88,10 @@
 		946F048B18FC261B00BC5D3C /* TwitterInitialUserInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwitterInitialUserInfo.m; path = Operation/TwitterInitialUserInfo.m; sourceTree = "<group>"; };
 		946F048D18FC54D100BC5D3C /* LoadTweetSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoadTweetSummary.h; path = Operation/LoadTweetSummary.h; sourceTree = "<group>"; };
 		946F048E18FC54D100BC5D3C /* LoadTweetSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoadTweetSummary.m; path = Operation/LoadTweetSummary.m; sourceTree = "<group>"; };
-		94AAA1F518FABCAF004FF8C3 /* RAOrchestration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAOrchestration.h; path = Orchestration/RAOrchestration.h; sourceTree = "<group>"; };
-		94AAA1F618FABCAF004FF8C3 /* RAOrchestration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAOrchestration.m; path = Orchestration/RAOrchestration.m; sourceTree = "<group>"; };
 		94AAA1F818FB040F004FF8C3 /* ParseAndStoreTweet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParseAndStoreTweet.h; path = Operation/ParseAndStoreTweet.h; sourceTree = "<group>"; };
 		94AAA1F918FB040F004FF8C3 /* ParseAndStoreTweet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ParseAndStoreTweet.m; path = Operation/ParseAndStoreTweet.m; sourceTree = "<group>"; };
+		94BCB45419083AEF000F1632 /* RAJobController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAJobController.h; path = Common/RAJobController.h; sourceTree = "<group>"; };
+		94BCB45519083AEF000F1632 /* RAJobController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAJobController.m; path = Common/RAJobController.m; sourceTree = "<group>"; };
 		E0CFADD82B214972AA1588B7 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		FF17C809D5F74EE0803F4077 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -253,6 +253,8 @@
 		946AAC4218F9EC9900C10F86 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				94BCB45419083AEF000F1632 /* RAJobController.h */,
+				94BCB45519083AEF000F1632 /* RAJobController.m */,
 			);
 			name = Common;
 			sourceTree = "<group>";
@@ -262,8 +264,6 @@
 			children = (
 				946AAC4A18FA18DE00C10F86 /* RefreshTimeline.h */,
 				946AAC4B18FA18DE00C10F86 /* RefreshTimeline.m */,
-				94AAA1F518FABCAF004FF8C3 /* RAOrchestration.h */,
-				94AAA1F618FABCAF004FF8C3 /* RAOrchestration.m */,
 				946A530118FC6A3B001818CF /* BackgroundLoadHistoricalTweets.h */,
 				946A530218FC6A3B001818CF /* BackgroundLoadHistoricalTweets.m */,
 			);
@@ -416,7 +416,7 @@
 				946AAC0518F9C81100C10F86 /* main.m in Sources */,
 				946A530318FC6A3B001818CF /* BackgroundLoadHistoricalTweets.m in Sources */,
 				946AAC3B18F9DFD100C10F86 /* TwitterAuthorized.m in Sources */,
-				94AAA1F718FABCAF004FF8C3 /* RAOrchestration.m in Sources */,
+				94BCB45619083AEF000F1632 /* RAJobController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

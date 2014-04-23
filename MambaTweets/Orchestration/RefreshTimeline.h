@@ -7,16 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "RAOrchestration.h"
+#import "RAJobController.h"
 
 FOUNDATION_EXPORT const NSString *kTimelineSummaryNotification;
-FOUNDATION_EXPORT const NSString *kTimelineNotAuthorizedNotification;
-FOUNDATION_EXPORT const NSString *kTimelineFinishedNotification;
 FOUNDATION_EXPORT const NSString *kIconFinishedDownloadNotification;
 
-@interface RefreshTimeline : RAOrchestration
+@interface RefreshTimeline : RAJobController
 
-#pragma mark - Class Methods
-+ (void)startRefresh;
+@property (nonatomic,readonly) BOOL authorized;
 
 @end
+
+

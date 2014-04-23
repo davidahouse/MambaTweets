@@ -19,8 +19,6 @@
 #import "DownloadTwitterProfileIcon.h"
 
 const NSString *kTimelineSummaryNotification = @"TIMELINESUMMARYNOTIFICATION";
-const NSString *kTimelineNotAuthorizedNotification = @"TIMELINENOTAUTHORIZEDNOTIFICATION";
-const NSString *kTimelineFinishedNotification = @"TIMELINEFINISHEDNOTIFICATION";
 const NSString *kIconFinishedDownloadNotification = @"ICONFINISHEDDOWNLOADNOTIFICATION";
 
 @interface RefreshTimeline()
@@ -31,13 +29,8 @@ const NSString *kIconFinishedDownloadNotification = @"ICONFINISHEDDOWNLOADNOTIFI
 
 @end
 
-@implementation RefreshTimeline
-
-#pragma mark - Class Methods
-+ (void)startRefresh
-{
-    RefreshTimeline *refreshOperation = [[RefreshTimeline alloc] init];
-    [[RefreshTimeline defaultOrchestrationQueue] addOperation:refreshOperation];
+@implementation RefreshTimeline {
+    BOOL _authorized;
 }
 
 #pragma mark - NSOperation stuff
@@ -52,6 +45,7 @@ const NSString *kIconFinishedDownloadNotification = @"ICONFINISHEDDOWNLOADNOTIFI
 - (void)authorizationFinished:(TwitterAuthorized *)auth
 {
     if ( auth.authorizedState == TwitterAuthorizedStateGranted ) {
+        _authorized = YES;
         NSLog(@"operation finished and we have twitter access!");
         
         // Save the account store, we will need it later
@@ -63,7 +57,7 @@ const NSString *kIconFinishedDownloadNotification = @"ICONFINISHEDDOWNLOADNOTIFI
     }
     else {
         NSLog(@"uh oh, we aren't authorized for twitter");
-        [[NSNotificationCenter defaultCenter] postNotificationName:(NSString *)kTimelineNotAuthorizedNotification object:nil userInfo:nil];
+        _authorized = NO;
     }
 }
 
@@ -72,7 +66,7 @@ const NSString *kIconFinishedDownloadNotification = @"ICONFINISHEDDOWNLOADNOTIFI
     // If we didn't get an account, something bad happened
     if ( !loadOperation.twitterAccount ) {
         NSLog(@"newAccount not found");
-        [[NSNotificationCenter defaultCenter] postNotificationName:(NSString *)kTimelineNotAuthorizedNotification object:nil userInfo:nil];
+        _authorized = NO;
     }
     else {
         self.twitterAccount = loadOperation.twitterAccount;
@@ -85,25 +79,29 @@ const NSString *kIconFinishedDownloadNotification = @"ICONFINISHEDDOWNLOADNOTIFI
         }
         else {
             NSLog(@"not a new account, we can go ahead and start the loads");
-     
-            // Go ahead and build our first summary
-            LoadTweetSummary *summaryOperation = [[LoadTweetSummary alloc] initWithNotificationName:(NSString *)kTimelineSummaryNotification account:self.twitterAccount];
-            [self trackAndQueueOperation:summaryOperation];
-
-            // start an operation to load the new tweets
-            TwitterTimelineTweets *timelineOperation = [[TwitterTimelineTweets alloc] initWithAccountStore:self.accountStore forTwitterAccount:self.twitterAccount inDirection:@"new"];
-            [self trackAndQueueOperation:timelineOperation withCompletion:@selector(timelineFinished:)];
-
-            // start another orchestration for loading the old tweets (this could take a while!)
-            BackgroundLoadHistoricalTweets *backgroundOrchestration = [[BackgroundLoadHistoricalTweets alloc] initWithAccountStore:self.accountStore account:self.twitterAccount];
-            [self trackAndQueueOperation:backgroundOrchestration];
+            [self startTweetLoading];
         }
-        
-        // Check to see if we have the twitter icon downloaded
-        if ( ![self.twitterAccount localIconFound] ) {
-            DownloadTwitterProfileIcon *downloadIcon = [[DownloadTwitterProfileIcon alloc] initWithTwitterAccount:self.twitterAccount notification:(NSString *)kIconFinishedDownloadNotification];
-            [self trackAndQueueOperation:downloadIcon];
-        }
+    }
+}
+
+- (void)startTweetLoading
+{
+    // Go ahead and build our first summary
+    LoadTweetSummary *summaryOperation = [[LoadTweetSummary alloc] initWithNotificationName:(NSString *)kTimelineSummaryNotification account:self.twitterAccount];
+    [self trackAndQueueOperation:summaryOperation];
+    
+    // start an operation to load the new tweets
+    TwitterTimelineTweets *timelineOperation = [[TwitterTimelineTweets alloc] initWithAccountStore:self.accountStore forTwitterAccount:self.twitterAccount inDirection:@"new"];
+    [self trackAndQueueOperation:timelineOperation withCompletion:@selector(timelineFinished:)];
+    
+    // start another orchestration for loading the old tweets (this could take a while!)
+    BackgroundLoadHistoricalTweets *backgroundOrchestration = [[BackgroundLoadHistoricalTweets alloc] initWithAccountStore:self.accountStore account:self.twitterAccount];
+    [self trackAndQueueOperation:backgroundOrchestration];
+    
+    // Check to see if we have the twitter icon downloaded
+    if ( ![self.twitterAccount localIconFound] ) {
+        DownloadTwitterProfileIcon *downloadIcon = [[DownloadTwitterProfileIcon alloc] initWithTwitterAccount:self.twitterAccount notification:(NSString *)kIconFinishedDownloadNotification];
+        [self trackAndQueueOperation:downloadIcon];
     }
 }
 
@@ -125,20 +123,7 @@ const NSString *kIconFinishedDownloadNotification = @"ICONFINISHEDDOWNLOADNOTIFI
         [newTweet MB_save];
     }
     
-    // Go ahead and build our first summary
-    LoadTweetSummary *summaryOperation = [[LoadTweetSummary alloc] initWithNotificationName:(NSString *)kTimelineSummaryNotification account:self.twitterAccount];
-    [self trackAndQueueOperation:summaryOperation];
-    
-    // start an operation to load the new tweets
-    TwitterTimelineTweets *timelineOperation = [[TwitterTimelineTweets alloc] initWithAccountStore:self.accountStore forTwitterAccount:self.twitterAccount inDirection:@"new"];
-    [self trackAndQueueOperation:timelineOperation withCompletion:@selector(timelineFinished:)];
-    
-    // start another orchestration for loading the old tweets (this could take a while!)
-    BackgroundLoadHistoricalTweets *backgroundOrchestration = [[BackgroundLoadHistoricalTweets alloc] initWithAccountStore:self.accountStore account:self.twitterAccount];
-    [self trackAndQueueOperation:backgroundOrchestration];
-    
-    // Check to see if the icon exists, if not, download it!
-    
+    [self startTweetLoading];
 }
 
 - (void)timelineFinished:(TwitterTimelineTweets *)timeline
@@ -158,11 +143,5 @@ const NSString *kIconFinishedDownloadNotification = @"ICONFINISHEDDOWNLOADNOTIFI
     LoadTweetSummary *summaryOperation = [[LoadTweetSummary alloc] initWithNotificationName:(NSString *)kTimelineSummaryNotification account:self.twitterAccount];
     [self trackAndQueueOperation:summaryOperation];
 }
-
-- (void)allOperationsFinished
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:(NSString *)kTimelineFinishedNotification object:nil userInfo:nil];
-}
-
 
 @end

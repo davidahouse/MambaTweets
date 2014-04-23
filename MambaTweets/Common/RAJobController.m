@@ -1,21 +1,19 @@
 //
-//  RAOrchestration.m
+//  RAJobController
 //  MambaTweets
 //
 //  Created by David House on 4/13/14.
 //  Copyright (c) 2014 randomaccident. All rights reserved.
 //
 
-#import "RAOrchestration.h"
+#import "RAJobController.h"
 #import <Objc/runtime.h>
 
 
-static char const * const OrchestrationQueueKey = "MambaObjectID";
-
 //
 //
 //
-@interface RAOrchestrationOperation : NSObject
+@interface RAJobControllerOperation : NSObject
 
 @property (nonatomic,strong) NSString *operationID;
 @property (nonatomic,strong) NSOperation *operation;
@@ -23,14 +21,14 @@ static char const * const OrchestrationQueueKey = "MambaObjectID";
 
 @end
 
-@implementation RAOrchestrationOperation
+@implementation RAJobControllerOperation
 @end
 
 
 //
 //
 //
-@interface RAOrchestrationOperationGroup : NSObject
+@interface RAJobControllerOperationGroup : NSObject
 
 @property (nonatomic,strong) NSString *groupName;
 @property (nonatomic,assign) NSUInteger operationCount;
@@ -38,13 +36,13 @@ static char const * const OrchestrationQueueKey = "MambaObjectID";
 
 @end
 
-@implementation RAOrchestrationOperationGroup
+@implementation RAJobControllerOperationGroup
 @end
 
 //
 //
 //
-@interface RAOrchestration()
+@interface RAJobController()
 
 #pragma mark - Properties
 @property (nonatomic,strong) NSMutableDictionary *currentOperations;
@@ -56,7 +54,7 @@ static char const * const OrchestrationQueueKey = "MambaObjectID";
 //
 //
 //
-@implementation RAOrchestration {
+@implementation RAJobController {
     NSOperationQueue *_defaultOperationQueue;
     dispatch_queue_t _completionQueue;
     NSOperationQueue *_concurrentQueue;
@@ -91,7 +89,7 @@ static char const * const OrchestrationQueueKey = "MambaObjectID";
 - (void)cancel
 {
     NSLog(@">>> ORCHESTATION CANCELLED !!! <<<");
-    for ( RAOrchestrationOperation *trackedOperation in [self.currentOperations allValues] ) {
+    for ( RAJobControllerOperation *trackedOperation in [self.currentOperations allValues] ) {
         [trackedOperation.operation cancel];
     }
     [self.currentOperations removeAllObjects];
@@ -101,26 +99,17 @@ static char const * const OrchestrationQueueKey = "MambaObjectID";
     [super cancel];
 }
 
-#pragma mark - Public Methods
-+ (NSOperationQueue *)defaultOrchestrationQueue
+#pragma mark - Public Job Methods
+- (void)startJob
 {
-    // if we already have a default queue for this class, go ahead
-    // and return it
-    NSOperationQueue *operationQueue = objc_getAssociatedObject([self class], OrchestrationQueueKey);
-    if ( operationQueue ) {
-        return operationQueue;
-    }
-    else {
-        NSOperationQueue *operationQueue = [[NSOperationQueue alloc] init];
-        operationQueue.maxConcurrentOperationCount = 1;
-        objc_setAssociatedObject([self class], OrchestrationQueueKey, operationQueue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        return operationQueue;
-    }
+    // create a random queue for this to run on
+    NSOperationQueue *jobQueue = [[NSOperationQueue alloc] init];
+    [jobQueue addOperation:self];
 }
 
-+ (void)cancelOrchestration
+- (void)startJobOnQueue:(NSOperationQueue *)queue
 {
-    [[self defaultOrchestrationQueue] cancelAllOperations];
+    [queue addOperation:self];
 }
 
 #pragma mark - Private Methods
@@ -139,7 +128,7 @@ static char const * const OrchestrationQueueKey = "MambaObjectID";
 #pragma mark - Track Operations
 - (void)trackOperation:(id)operation
 {
-    RAOrchestrationOperation *trackedOperation = [self orchestrationOperationFromOperation:operation];
+    RAJobControllerOperation *trackedOperation = [self jobOperationFromOperation:operation];
     [self addTrackedOperation:trackedOperation];
     
     
@@ -165,7 +154,7 @@ static char const * const OrchestrationQueueKey = "MambaObjectID";
 
 - (void)trackOperation:(id)operation withCompletion:(SEL)completionSelector
 {
-    RAOrchestrationOperation *trackedOperation = [self orchestrationOperationFromOperation:operation withCompletion:completionSelector];
+    RAJobControllerOperation *trackedOperation = [self orchestrationOperationFromOperation:operation withCompletion:completionSelector];
     [self addTrackedOperation:trackedOperation];
     
 //    
@@ -198,12 +187,12 @@ static char const * const OrchestrationQueueKey = "MambaObjectID";
     // operation to the list, otherwise we need to create it
     if ( [self.groupedOperations objectForKey:groupKey] ) {
         
-        RAOrchestrationOperationGroup *group = [self.groupedOperations objectForKey:groupKey];
+        RAJobControllerOperationGroup *group = [self.groupedOperations objectForKey:groupKey];
         group.groupCompletionSelector = completionSelector;
     }
     else {
         
-        RAOrchestrationOperationGroup *group = [[RAOrchestrationOperationGroup alloc] init];
+        RAJobControllerOperationGroup *group = [[RAJobControllerOperationGroup alloc] init];
         group.groupName = groupKey;
         group.operationCount = 0;
         group.groupCompletionSelector = completionSelector;
@@ -214,13 +203,13 @@ static char const * const OrchestrationQueueKey = "MambaObjectID";
 #pragma mark - Private Methods
 - (void)operationDone:(NSString *)operationID
 {
-    RAOrchestrationOperation *trackedOperation = [self.currentOperations objectForKey:operationID];
+    RAJobControllerOperation *trackedOperation = [self.currentOperations objectForKey:operationID];
     NSString *groupKey = NSStringFromClass([trackedOperation.operation class]);
 
     NSLog(@"DONE >> %@ (%@)",groupKey,trackedOperation.operationID);
     
     for ( NSString *key in self.groupedOperations ) {
-        RAOrchestrationOperationGroup *group = [self.groupedOperations objectForKey:key];
+        RAJobControllerOperationGroup *group = [self.groupedOperations objectForKey:key];
         NSLog(@"GROUP: %@ count = %d SELECTOR: %@",key,group.operationCount,group.groupCompletionSelector ? @"YES":@"NO");
     }
     
@@ -240,7 +229,7 @@ static char const * const OrchestrationQueueKey = "MambaObjectID";
     
     // Now lets check the group as well
     if ( [self.groupedOperations objectForKey:groupKey] ) {
-        RAOrchestrationOperationGroup *group = [self.groupedOperations objectForKey:groupKey];
+        RAJobControllerOperationGroup *group = [self.groupedOperations objectForKey:groupKey];
         group.operationCount--;
         NSLog(@"group %@ operationCount = %d",groupKey,group.operationCount);
         if ( group.operationCount == 0 ) {
@@ -268,28 +257,28 @@ static char const * const OrchestrationQueueKey = "MambaObjectID";
     [self didChangeValueForKey:@"isFinished"];
 }
 
-- (RAOrchestrationOperation *)orchestrationOperationFromOperation:(id)operation
+- (RAJobControllerOperation *)jobOperationFromOperation:(id)operation
 {
     NSString *operationID = [NSString stringWithFormat:@"%@_%@",NSStringFromClass([operation class]),[[NSUUID UUID] UUIDString]];
 
-    RAOrchestrationOperation *trackedOperation = [[RAOrchestrationOperation alloc] init];
+    RAJobControllerOperation *trackedOperation = [[RAJobControllerOperation alloc] init];
     trackedOperation.operation = operation;
     trackedOperation.operationID = operationID;
     return trackedOperation;
 }
 
-- (RAOrchestrationOperation *)orchestrationOperationFromOperation:(id)operation withCompletion:(SEL)completionSelector
+- (RAJobControllerOperation *)orchestrationOperationFromOperation:(id)operation withCompletion:(SEL)completionSelector
 {
     NSString *operationID = [NSString stringWithFormat:@"%@_%@",NSStringFromClass([operation class]),[[NSUUID UUID] UUIDString]];
 
-    RAOrchestrationOperation *trackedOperation = [[RAOrchestrationOperation alloc] init];
+    RAJobControllerOperation *trackedOperation = [[RAJobControllerOperation alloc] init];
     trackedOperation.operationID = operationID;
     trackedOperation.operation = operation;
     trackedOperation.completionSelector = completionSelector;
     return trackedOperation;
 }
 
-- (void)addTrackedOperation:(RAOrchestrationOperation *)trackedOperation
+- (void)addTrackedOperation:(RAJobControllerOperation *)trackedOperation
 {
     NSString *groupKey = NSStringFromClass([trackedOperation.operation class]);
 
@@ -310,13 +299,13 @@ static char const * const OrchestrationQueueKey = "MambaObjectID";
     if ( [self.groupedOperations objectForKey:groupKey] ) {
         
         NSLog(@"incrementing operation count for group: %@",groupKey);
-        RAOrchestrationOperationGroup *group = [self.groupedOperations objectForKey:groupKey];
+        RAJobControllerOperationGroup *group = [self.groupedOperations objectForKey:groupKey];
         group.operationCount++;
     }
     else {
         
         NSLog(@"group not found, adding: %@",groupKey);
-        RAOrchestrationOperationGroup *group = [[RAOrchestrationOperationGroup alloc] init];
+        RAJobControllerOperationGroup *group = [[RAJobControllerOperationGroup alloc] init];
         group.groupName = groupKey;
         group.operationCount = 1;
         [self.groupedOperations setObject:group forKey:groupKey];

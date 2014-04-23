@@ -23,13 +23,6 @@
 
 @implementation BackgroundLoadHistoricalTweets
 
-#pragma mark - Class Methods
-+ (void)startWithAccountStore:(ACAccountStore *)accountStore account:(TwitterAccount *)twitterAccount;
-{
-    BackgroundLoadHistoricalTweets *historyOperation = [[BackgroundLoadHistoricalTweets alloc] initWithAccountStore:accountStore account:twitterAccount];
-    [[BackgroundLoadHistoricalTweets defaultOrchestrationQueue] addOperation:historyOperation];
-}
-
 #pragma mark - Initializer
 - (id)initWithAccountStore:(ACAccountStore *)accountStore account:(TwitterAccount *)twitterAccount
 {
@@ -65,6 +58,12 @@
     // If we had tweets, save the MaxID so we know where to start from the next call
     if ( timeline.tweets && [timeline.tweets count] > 0 ) {
         NSDictionary *lastTweet = [timeline.tweets lastObject];
+        
+        // If the maxID is already the same, we have reached the end, so we should just stop anyway
+        if ( [self.twitterAccount.maxID isEqualToString:lastTweet[@"id_str"]] ) {
+            return;
+        }
+        
         self.twitterAccount.maxID = lastTweet[@"id_str"];
         [self.twitterAccount MB_save];
     }

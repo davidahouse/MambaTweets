@@ -1,5 +1,5 @@
 //
-//  RAOrchestration.h
+//  RAJobController
 //  MambaTweets
 //
 //  Created by David House on 4/13/14.
@@ -8,14 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-@interface RAOrchestration : NSOperation
+@interface RAJobController : NSOperation
 
 #pragma mark - Properties
 @property (nonatomic,readonly) NSOperationQueue *defaultOperationQueue;
 
-#pragma mark - Class Methods
-+ (NSOperationQueue *)defaultOrchestrationQueue;
-+ (void)cancelOrchestration;
+#pragma mark - Public Job Methods
+- (void)startJob;
+- (void)startJobOnQueue:(NSOperationQueue *)queue;
 
 #pragma mark - Public Methods
 - (void)operationFinished:(id)operation;
