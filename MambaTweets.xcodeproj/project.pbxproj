@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		9417EC9719060396000FC3C4 /* DownloadTwitterProfileIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 9417EC9619060396000FC3C4 /* DownloadTwitterProfileIcon.m */; };
-		946A530318FC6A3B001818CF /* BackgroundLoadHistoricalTweets.m in Sources */ = {isa = PBXBuildFile; fileRef = 946A530218FC6A3B001818CF /* BackgroundLoadHistoricalTweets.m */; };
+		945A521B19086402007C6597 /* BackgroundLoadHistoricalTweets.m in Sources */ = {isa = PBXBuildFile; fileRef = 945A521819086402007C6597 /* BackgroundLoadHistoricalTweets.m */; };
+		945A521C19086402007C6597 /* RefreshTimeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 945A521A19086402007C6597 /* RefreshTimeline.m */; };
 		946AABF918F9C81100C10F86 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 946AABF818F9C81100C10F86 /* Foundation.framework */; };
 		946AABFB18F9C81100C10F86 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 946AABFA18F9C81100C10F86 /* CoreGraphics.framework */; };
 		946AABFD18F9C81100C10F86 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 946AABFC18F9C81100C10F86 /* UIKit.framework */; };
@@ -27,7 +28,6 @@
 		946AAC3718F9CCEF00C10F86 /* Tweet.m in Sources */ = {isa = PBXBuildFile; fileRef = 946AAC3618F9CCEF00C10F86 /* Tweet.m */; };
 		946AAC3B18F9DFD100C10F86 /* TwitterAuthorized.m in Sources */ = {isa = PBXBuildFile; fileRef = 946AAC3A18F9DFD100C10F86 /* TwitterAuthorized.m */; };
 		946AAC3E18F9E71100C10F86 /* TwitterTimelineTweets.m in Sources */ = {isa = PBXBuildFile; fileRef = 946AAC3D18F9E71100C10F86 /* TwitterTimelineTweets.m */; };
-		946AAC4C18FA18DE00C10F86 /* RefreshTimeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 946AAC4B18FA18DE00C10F86 /* RefreshTimeline.m */; };
 		946F048618FC22FF00BC5D3C /* TwitterAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 946F048518FC22FF00BC5D3C /* TwitterAccount.m */; };
 		946F048918FC238300BC5D3C /* LoadOrCreateTwitterAccountModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 946F048818FC238300BC5D3C /* LoadOrCreateTwitterAccountModel.m */; };
 		946F048C18FC261B00BC5D3C /* TwitterInitialUserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 946F048B18FC261B00BC5D3C /* TwitterInitialUserInfo.m */; };
@@ -50,8 +50,10 @@
 /* Begin PBXFileReference section */
 		9417EC9519060396000FC3C4 /* DownloadTwitterProfileIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadTwitterProfileIcon.h; path = Operation/DownloadTwitterProfileIcon.h; sourceTree = "<group>"; };
 		9417EC9619060396000FC3C4 /* DownloadTwitterProfileIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadTwitterProfileIcon.m; path = Operation/DownloadTwitterProfileIcon.m; sourceTree = "<group>"; };
-		946A530118FC6A3B001818CF /* BackgroundLoadHistoricalTweets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BackgroundLoadHistoricalTweets.h; path = Orchestration/BackgroundLoadHistoricalTweets.h; sourceTree = "<group>"; };
-		946A530218FC6A3B001818CF /* BackgroundLoadHistoricalTweets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BackgroundLoadHistoricalTweets.m; path = Orchestration/BackgroundLoadHistoricalTweets.m; sourceTree = "<group>"; };
+		945A521719086402007C6597 /* BackgroundLoadHistoricalTweets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundLoadHistoricalTweets.h; sourceTree = "<group>"; };
+		945A521819086402007C6597 /* BackgroundLoadHistoricalTweets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackgroundLoadHistoricalTweets.m; sourceTree = "<group>"; };
+		945A521919086402007C6597 /* RefreshTimeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefreshTimeline.h; sourceTree = "<group>"; };
+		945A521A19086402007C6597 /* RefreshTimeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefreshTimeline.m; sourceTree = "<group>"; };
 		946AABF518F9C81100C10F86 /* MambaTweets.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MambaTweets.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		946AABF818F9C81100C10F86 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		946AABFA18F9C81100C10F86 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -78,8 +80,6 @@
 		946AAC3A18F9DFD100C10F86 /* TwitterAuthorized.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwitterAuthorized.m; path = Operation/TwitterAuthorized.m; sourceTree = "<group>"; };
 		946AAC3C18F9E71100C10F86 /* TwitterTimelineTweets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwitterTimelineTweets.h; path = Operation/TwitterTimelineTweets.h; sourceTree = "<group>"; };
 		946AAC3D18F9E71100C10F86 /* TwitterTimelineTweets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwitterTimelineTweets.m; path = Operation/TwitterTimelineTweets.m; sourceTree = "<group>"; };
-		946AAC4A18FA18DE00C10F86 /* RefreshTimeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RefreshTimeline.h; path = Orchestration/RefreshTimeline.h; sourceTree = "<group>"; };
-		946AAC4B18FA18DE00C10F86 /* RefreshTimeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RefreshTimeline.m; path = Orchestration/RefreshTimeline.m; sourceTree = "<group>"; };
 		946F048418FC22FF00BC5D3C /* TwitterAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwitterAccount.h; path = Model/TwitterAccount.h; sourceTree = "<group>"; };
 		946F048518FC22FF00BC5D3C /* TwitterAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwitterAccount.m; path = Model/TwitterAccount.m; sourceTree = "<group>"; };
 		946F048718FC238300BC5D3C /* LoadOrCreateTwitterAccountModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoadOrCreateTwitterAccountModel.h; path = Operation/LoadOrCreateTwitterAccountModel.h; sourceTree = "<group>"; };
@@ -122,6 +122,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		945A521619086402007C6597 /* Jobs */ = {
+			isa = PBXGroup;
+			children = (
+				945A521719086402007C6597 /* BackgroundLoadHistoricalTweets.h */,
+				945A521819086402007C6597 /* BackgroundLoadHistoricalTweets.m */,
+				945A521919086402007C6597 /* RefreshTimeline.h */,
+				945A521A19086402007C6597 /* RefreshTimeline.m */,
+			);
+			path = Jobs;
+			sourceTree = "<group>";
+		};
 		946AABEC18F9C81100C10F86 = {
 			isa = PBXGroup;
 			children = (
@@ -158,7 +169,7 @@
 		946AABFE18F9C81100C10F86 /* MambaTweets */ = {
 			isa = PBXGroup;
 			children = (
-				946AAC4918FA18B000C10F86 /* Orchestration */,
+				945A521619086402007C6597 /* Jobs */,
 				946AAC4218F9EC9900C10F86 /* Common */,
 				946AAC3818F9DF6200C10F86 /* Operation */,
 				946AAC2E18F9C8C400C10F86 /* Controller */,
@@ -257,17 +268,6 @@
 				94BCB45519083AEF000F1632 /* RAJobController.m */,
 			);
 			name = Common;
-			sourceTree = "<group>";
-		};
-		946AAC4918FA18B000C10F86 /* Orchestration */ = {
-			isa = PBXGroup;
-			children = (
-				946AAC4A18FA18DE00C10F86 /* RefreshTimeline.h */,
-				946AAC4B18FA18DE00C10F86 /* RefreshTimeline.m */,
-				946A530118FC6A3B001818CF /* BackgroundLoadHistoricalTweets.h */,
-				946A530218FC6A3B001818CF /* BackgroundLoadHistoricalTweets.m */,
-			);
-			name = Orchestration;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -404,8 +404,9 @@
 			files = (
 				946AAC0F18F9C81100C10F86 /* ViewController.m in Sources */,
 				946AAC0918F9C81100C10F86 /* AppDelegate.m in Sources */,
+				945A521C19086402007C6597 /* RefreshTimeline.m in Sources */,
+				945A521B19086402007C6597 /* BackgroundLoadHistoricalTweets.m in Sources */,
 				946F048618FC22FF00BC5D3C /* TwitterAccount.m in Sources */,
-				946AAC4C18FA18DE00C10F86 /* RefreshTimeline.m in Sources */,
 				946F048F18FC54D100BC5D3C /* LoadTweetSummary.m in Sources */,
 				9417EC9719060396000FC3C4 /* DownloadTwitterProfileIcon.m in Sources */,
 				946AAC3E18F9E71100C10F86 /* TwitterTimelineTweets.m in Sources */,
@@ -414,7 +415,6 @@
 				946F048918FC238300BC5D3C /* LoadOrCreateTwitterAccountModel.m in Sources */,
 				94AAA1FA18FB040F004FF8C3 /* ParseAndStoreTweet.m in Sources */,
 				946AAC0518F9C81100C10F86 /* main.m in Sources */,
-				946A530318FC6A3B001818CF /* BackgroundLoadHistoricalTweets.m in Sources */,
 				946AAC3B18F9DFD100C10F86 /* TwitterAuthorized.m in Sources */,
 				94BCB45619083AEF000F1632 /* RAJobController.m in Sources */,
 			);
