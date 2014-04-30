@@ -27,6 +27,12 @@
 // MambaStore
 #define COCOAPODS_POD_AVAILABLE_MambaStore
 #define COCOAPODS_VERSION_MAJOR_MambaStore 0
-#define COCOAPODS_VERSION_MINOR_MambaStore 1
-#define COCOAPODS_VERSION_PATCH_MambaStore 3
+#define COCOAPODS_VERSION_MINOR_MambaStore 2
+#define COCOAPODS_VERSION_PATCH_MambaStore 0
+
+// RAJobController
+#define COCOAPODS_POD_AVAILABLE_RAJobController
+#define COCOAPODS_VERSION_MAJOR_RAJobController 0
+#define COCOAPODS_VERSION_MINOR_RAJobController 1
+#define COCOAPODS_VERSION_PATCH_RAJobController 0
 

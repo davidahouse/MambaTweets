@@ -38,7 +38,7 @@ const NSString *kIconFinishedDownloadNotification = @"ICONFINISHEDDOWNLOADNOTIFI
 {
     // Start with getting authorized to use twitter
     TwitterAuthorized *twitterAuthorized = [[TwitterAuthorized alloc] init];
-    [self trackAndQueueOperation:twitterAuthorized withCompletion:@selector(authorizationFinished:)];
+    [self trackAndQueueTask:twitterAuthorized withCompletion:@selector(authorizationFinished:)];
 }
 
 #pragma mark - Private Methods
@@ -53,7 +53,7 @@ const NSString *kIconFinishedDownloadNotification = @"ICONFINISHEDDOWNLOADNOTIFI
         
         // Load the twitter account from our storage
         LoadOrCreateTwitterAccountModel *loadOperation = [[LoadOrCreateTwitterAccountModel alloc] initWithAccountStore:auth.accountStore];
-        [self trackAndQueueOperation:loadOperation withCompletion:@selector(accountLoaded:)];
+        [self trackAndQueueTask:loadOperation withCompletion:@selector(accountLoaded:)];
     }
     else {
         NSLog(@"uh oh, we aren't authorized for twitter");
@@ -75,7 +75,7 @@ const NSString *kIconFinishedDownloadNotification = @"ICONFINISHEDDOWNLOADNOTIFI
         if ( loadOperation.isNewAccount ) {
             NSLog(@"new account, starting the initial user info task");
             TwitterInitialUserInfo *initialInfo = [[TwitterInitialUserInfo alloc] initWithAccountStore:self.accountStore];
-            [self trackAndQueueOperation:initialInfo withCompletion:@selector(initialLoadFinished:)];
+            [self trackAndQueueTask:initialInfo withCompletion:@selector(initialLoadFinished:)];
         }
         else {
             NSLog(@"not a new account, we can go ahead and start the loads");
@@ -88,20 +88,20 @@ const NSString *kIconFinishedDownloadNotification = @"ICONFINISHEDDOWNLOADNOTIFI
 {
     // Go ahead and build our first summary
     LoadTweetSummary *summaryOperation = [[LoadTweetSummary alloc] initWithNotificationName:(NSString *)kTimelineSummaryNotification account:self.twitterAccount];
-    [self trackAndQueueOperation:summaryOperation];
+    [self trackAndQueueTask:summaryOperation];
     
     // start an operation to load the new tweets
     TwitterTimelineTweets *timelineOperation = [[TwitterTimelineTweets alloc] initWithAccountStore:self.accountStore forTwitterAccount:self.twitterAccount inDirection:@"new"];
-    [self trackAndQueueOperation:timelineOperation withCompletion:@selector(timelineFinished:)];
+    [self trackAndQueueTask:timelineOperation withCompletion:@selector(timelineFinished:)];
     
     // start another orchestration for loading the old tweets (this could take a while!)
     BackgroundLoadHistoricalTweets *backgroundOrchestration = [[BackgroundLoadHistoricalTweets alloc] initWithAccountStore:self.accountStore account:self.twitterAccount];
-    [self trackAndQueueOperation:backgroundOrchestration];
+    [self trackAndQueueTask:backgroundOrchestration];
     
     // Check to see if we have the twitter icon downloaded
     if ( ![self.twitterAccount localIconFound] ) {
         DownloadTwitterProfileIcon *downloadIcon = [[DownloadTwitterProfileIcon alloc] initWithTwitterAccount:self.twitterAccount notification:(NSString *)kIconFinishedDownloadNotification];
-        [self trackAndQueueOperation:downloadIcon];
+        [self trackAndQueueTask:downloadIcon];
     }
 }
 
@@ -134,14 +134,14 @@ const NSString *kIconFinishedDownloadNotification = @"ICONFINISHEDDOWNLOADNOTIFI
     [self setCompletion:@selector(allTweetsParsed) group:[ParseAndStoreTweet class]];
     for ( NSDictionary *tweetDictionary in timeline.tweets ) {
         ParseAndStoreTweet *parseOp = [[ParseAndStoreTweet alloc] initWithTweetDictionary:tweetDictionary];
-        [self trackAndQueueOperation:parseOp];
+        [self trackAndQueueTask:parseOp];
     }
 }
 
 - (void)allTweetsParsed
 {
     LoadTweetSummary *summaryOperation = [[LoadTweetSummary alloc] initWithNotificationName:(NSString *)kTimelineSummaryNotification account:self.twitterAccount];
-    [self trackAndQueueOperation:summaryOperation];
+    [self trackAndQueueTask:summaryOperation];
 }
 
 @end

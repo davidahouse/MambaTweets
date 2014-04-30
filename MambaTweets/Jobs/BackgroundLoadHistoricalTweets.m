@@ -49,7 +49,7 @@
         // start an operation to load the new tweets
         self.parsedTweets = 0;
         TwitterTimelineTweets *timelineOperation = [[TwitterTimelineTweets alloc] initWithAccountStore:self.accountStore forTwitterAccount:self.twitterAccount inDirection:@"old"];
-        [self trackAndQueueOperation:timelineOperation withCompletion:@selector(timelineFinished:)];
+        [self trackAndQueueTask:timelineOperation withCompletion:@selector(timelineFinished:)];
     }
 }
 
@@ -75,7 +75,7 @@
     for ( NSDictionary *tweetDictionary in timeline.tweets ) {
         self.parsedTweets++;
         ParseAndStoreTweet *parseOp = [[ParseAndStoreTweet alloc] initWithTweetDictionary:tweetDictionary];
-        [self trackAndQueueOperation:parseOp];
+        [self trackAndQueueTask:parseOp];
     }
 }
 
@@ -86,12 +86,12 @@
     
         // Fire off a summary
         LoadTweetSummary *summaryOperation = [[LoadTweetSummary alloc] initWithNotificationName:@"TIMELINESUMMARYNOTIFICATION" account:self.twitterAccount];
-        [self trackAndQueueOperation:summaryOperation];
+        [self trackAndQueueTask:summaryOperation];
 
         // Also load more tweets!
         self.parsedTweets = 0;
         TwitterTimelineTweets *timelineOperation = [[TwitterTimelineTweets alloc] initWithAccountStore:self.accountStore forTwitterAccount:self.twitterAccount inDirection:@"old"];
-        [self trackAndQueueOperation:timelineOperation withCompletion:@selector(timelineFinished:)];
+        [self trackAndQueueTask:timelineOperation withCompletion:@selector(timelineFinished:)];
     }
     else {
         // Assume we hit the end so we are done

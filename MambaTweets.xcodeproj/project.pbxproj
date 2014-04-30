@@ -33,7 +33,6 @@
 		946F048C18FC261B00BC5D3C /* TwitterInitialUserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 946F048B18FC261B00BC5D3C /* TwitterInitialUserInfo.m */; };
 		946F048F18FC54D100BC5D3C /* LoadTweetSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = 946F048E18FC54D100BC5D3C /* LoadTweetSummary.m */; };
 		94AAA1FA18FB040F004FF8C3 /* ParseAndStoreTweet.m in Sources */ = {isa = PBXBuildFile; fileRef = 94AAA1F918FB040F004FF8C3 /* ParseAndStoreTweet.m */; };
-		94BCB45619083AEF000F1632 /* RAJobController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94BCB45519083AEF000F1632 /* RAJobController.m */; };
 		D3DDE9F73FD14FDE99A270BC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF17C809D5F74EE0803F4077 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -90,8 +89,6 @@
 		946F048E18FC54D100BC5D3C /* LoadTweetSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoadTweetSummary.m; path = Operation/LoadTweetSummary.m; sourceTree = "<group>"; };
 		94AAA1F818FB040F004FF8C3 /* ParseAndStoreTweet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParseAndStoreTweet.h; path = Operation/ParseAndStoreTweet.h; sourceTree = "<group>"; };
 		94AAA1F918FB040F004FF8C3 /* ParseAndStoreTweet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ParseAndStoreTweet.m; path = Operation/ParseAndStoreTweet.m; sourceTree = "<group>"; };
-		94BCB45419083AEF000F1632 /* RAJobController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAJobController.h; path = Common/RAJobController.h; sourceTree = "<group>"; };
-		94BCB45519083AEF000F1632 /* RAJobController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAJobController.m; path = Common/RAJobController.m; sourceTree = "<group>"; };
 		E0CFADD82B214972AA1588B7 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		FF17C809D5F74EE0803F4077 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -170,7 +167,6 @@
 			isa = PBXGroup;
 			children = (
 				945A521619086402007C6597 /* Jobs */,
-				946AAC4218F9EC9900C10F86 /* Common */,
 				946AAC3818F9DF6200C10F86 /* Operation */,
 				946AAC2E18F9C8C400C10F86 /* Controller */,
 				946AAC2D18F9C8BE00C10F86 /* Model */,
@@ -259,15 +255,6 @@
 				9417EC9619060396000FC3C4 /* DownloadTwitterProfileIcon.m */,
 			);
 			name = Operation;
-			sourceTree = "<group>";
-		};
-		946AAC4218F9EC9900C10F86 /* Common */ = {
-			isa = PBXGroup;
-			children = (
-				94BCB45419083AEF000F1632 /* RAJobController.h */,
-				94BCB45519083AEF000F1632 /* RAJobController.m */,
-			);
-			name = Common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -416,7 +403,6 @@
 				94AAA1FA18FB040F004FF8C3 /* ParseAndStoreTweet.m in Sources */,
 				946AAC0518F9C81100C10F86 /* main.m in Sources */,
 				946AAC3B18F9DFD100C10F86 /* TwitterAuthorized.m in Sources */,
-				94BCB45619083AEF000F1632 /* RAJobController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
