@@ -6,12 +6,12 @@
 //  Copyright (c) 2014 randomaccident. All rights reserved.
 //
 
-#import "RAJobController.h"
+#import "DHJobController.h"
 #import <Accounts/Accounts.h>
 
 @class TwitterAccount;
 
-@interface BackgroundLoadHistoricalTweets : RAJobController
+@interface BackgroundLoadHistoricalTweets : DHJobController
 
 #pragma mark - Initializer
 - (id)initWithAccountStore:(ACAccountStore *)accountStore account:(TwitterAccount *)twitterAccount;

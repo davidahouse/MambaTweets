@@ -7,13 +7,13 @@
 //
 
 #import "AppDelegate.h"
-#import "MambaStore.h"
+#import "DHMambaStore.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [MambaStore openStore];
+    [DHMambaStore openStore];
     
     return YES;
 }

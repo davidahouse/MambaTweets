@@ -7,12 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "RAJobController.h"
+#import "DHJobController.h"
 
 FOUNDATION_EXPORT const NSString *kTimelineSummaryNotification;
 FOUNDATION_EXPORT const NSString *kIconFinishedDownloadNotification;
 
-@interface RefreshTimeline : RAJobController
+@interface RefreshTimeline : DHJobController
 
 @property (nonatomic,readonly) BOOL authorized;
 

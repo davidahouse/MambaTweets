@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "NSObject+MambaObject.h"
+#import "NSObject+DHMambaObject.h"
 
-@interface TwitterAccount : NSObject<MambaObjectProperties>
+@interface TwitterAccount : NSObject<DHMambaObjectProperties>
 
 #pragma mark - Properties
 @property (nonatomic,strong) NSString *userName;
