@@ -11,6 +11,7 @@
 #import "ParseAndStoreTweet.h"
 #import "LoadTweetSummary.h"
 #import "TwitterAccount.h"
+#import "ParseTimelineTweets.h"
 
 @interface BackgroundLoadHistoricalTweets()
 
@@ -18,6 +19,11 @@
 @property (nonatomic,strong) ACAccountStore *accountStore;
 @property (nonatomic,strong) TwitterAccount *twitterAccount;
 @property (nonatomic,assign) NSUInteger parsedTweets;
+
+@property (nonatomic,assign,getter = isDone) BOOL done;
+@property (nonatomic,strong) TwitterTimelineTweets *timelineOperation;
+@property (nonatomic,strong) NSOperationQueue *childQueue;
+@property (nonatomic,strong) ParseTimelineTweets *parseTweetsOperation;
 
 @end
 
@@ -33,11 +39,20 @@
     return self;
 }
 
+#pragma mark - Properties
+- (NSOperationQueue *)childQueue
+{
+    if ( !_childQueue ) {
+        _childQueue = [[NSOperationQueue alloc] init];
+    }
+    return _childQueue;
+}
+
 #pragma mark - NSOperation stuff
-- (void)main
+- (void)start
 {
     @autoreleasepool {
-    
+        
         NSLog(@"Starting background load historical tweets...");
         
         // If we are cancelled, nothing to do
@@ -45,22 +60,57 @@
             return;
         }
         
+        self.done = NO;
+        
         // Start the first instance of loading past tweets based on our Max ID
         // start an operation to load the new tweets
         self.parsedTweets = 0;
-        TwitterTimelineTweets *timelineOperation = [[TwitterTimelineTweets alloc] initWithAccountStore:self.accountStore forTwitterAccount:self.twitterAccount inDirection:@"old"];
-        [self trackAndQueueTask:timelineOperation withCompletion:@selector(timelineFinished:)];
+        self.timelineOperation = [[TwitterTimelineTweets alloc] initWithAccountStore:self.accountStore forTwitterAccount:self.twitterAccount inDirection:@"old"];
+        __weak typeof(self) weakself = self;
+        [self.timelineOperation setCompletionBlock:^{
+            [weakself timelineFinished];
+        }];
+        [self.childQueue addOperation:self.timelineOperation];
     }
 }
 
-- (void)timelineFinished:(TwitterTimelineTweets *)timeline
+- (BOOL)isFinished
+{
+    return self.done;
+}
+
+- (BOOL)isExecuting
+{
+    return !self.done;
+}
+
+- (BOOL)isConcurrent
+{
+    return YES;
+}
+
+- (void)cancel
+{
+    [super cancel];
+    
+    [self.childQueue cancelAllOperations];
+    
+    [self willChangeValueForKey:@"isFinished"];
+    self.done = YES;
+    [self didChangeValueForKey:@"isFinished"];
+}
+
+- (void)timelineFinished
 {
     // If we had tweets, save the MaxID so we know where to start from the next call
-    if ( timeline.tweets && [timeline.tweets count] > 0 ) {
-        NSDictionary *lastTweet = [timeline.tweets lastObject];
+    if ( self.timelineOperation.tweets && [self.timelineOperation.tweets count] > 0 ) {
+        NSDictionary *lastTweet = [self.timelineOperation.tweets lastObject];
         
         // If the maxID is already the same, we have reached the end, so we should just stop anyway
         if ( [self.twitterAccount.maxID isEqualToString:lastTweet[@"id_str"]] ) {
+            [self willChangeValueForKey:@"isFinished"];
+            self.done = YES;
+            [self didChangeValueForKey:@"isFinished"];
             return;
         }
         
@@ -71,12 +121,14 @@
     // For each of the tweets, parse it from the JSON
     // and load it into our local store. Also we want
     // to keep track of a summary of the tweets.
-    [self setCompletion:@selector(allTweetsParsed) group:[ParseAndStoreTweet class]];
-    for ( NSDictionary *tweetDictionary in timeline.tweets ) {
-        self.parsedTweets++;
-        ParseAndStoreTweet *parseOp = [[ParseAndStoreTweet alloc] initWithTweetDictionary:tweetDictionary];
-        [self trackAndQueueTask:parseOp];
-    }
+    __weak typeof(self) weakself = self;
+    self.parseTweetsOperation = [[ParseTimelineTweets alloc] init];
+    self.parseTweetsOperation.tweets = self.timelineOperation.tweets;
+    self.parsedTweets = [self.timelineOperation.tweets count];
+    [self.parseTweetsOperation setCompletionBlock:^{
+        [weakself allTweetsParsed];
+    }];
+    [self.childQueue addOperation:self.parseTweetsOperation];
 }
 
 - (void)allTweetsParsed
@@ -86,15 +138,22 @@
     
         // Fire off a summary
         LoadTweetSummary *summaryOperation = [[LoadTweetSummary alloc] initWithNotificationName:@"TIMELINESUMMARYNOTIFICATION" account:self.twitterAccount];
-        [self trackAndQueueTask:summaryOperation];
+        [self.childQueue addOperation:summaryOperation];
 
         // Also load more tweets!
         self.parsedTweets = 0;
-        TwitterTimelineTweets *timelineOperation = [[TwitterTimelineTweets alloc] initWithAccountStore:self.accountStore forTwitterAccount:self.twitterAccount inDirection:@"old"];
-        [self trackAndQueueTask:timelineOperation withCompletion:@selector(timelineFinished:)];
+        self.timelineOperation = [[TwitterTimelineTweets alloc] initWithAccountStore:self.accountStore forTwitterAccount:self.twitterAccount inDirection:@"old"];
+        __weak typeof(self) weakself = self;
+        [self.timelineOperation setCompletionBlock:^{
+            [weakself timelineFinished];
+        }];
+        [self.childQueue addOperation:self.timelineOperation];
     }
     else {
         // Assume we hit the end so we are done
+        [self willChangeValueForKey:@"isFinished"];
+        self.done = YES;
+        [self didChangeValueForKey:@"isFinished"];
     }
 }
 

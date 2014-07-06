@@ -7,14 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DHJobController.h"
 
 FOUNDATION_EXPORT const NSString *kTimelineSummaryNotification;
 FOUNDATION_EXPORT const NSString *kIconFinishedDownloadNotification;
 
-@interface RefreshTimeline : DHJobController
+@interface RefreshTimeline : NSOperation
 
+#pragma mark - Properties
 @property (nonatomic,readonly) BOOL authorized;
+
+#pragma mark - Class Methods
++ (RefreshTimeline *)startRefreshJob;
 
 @end
 

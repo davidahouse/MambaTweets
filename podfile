@@ -3,4 +3,4 @@ platform :ios, '7.0'
 inhibit_all_warnings!
 
 pod 'DHMambaStore', :git => 'https://github.com/davidahouse/DHMambaStore.git'
-pod 'DHJobController', :git => 'https://github.com/davidahouse/DHJobController.git'
+

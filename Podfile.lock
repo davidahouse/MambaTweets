@@ -1,26 +1,21 @@
 PODS:
-  - DHJobController (0.1.1)
   - DHMambaStore (0.2.1):
     - FMDB
-  - FMDB (2.2):
+  - FMDB (2.3):
     - FMDB/standard
-  - FMDB/common (2.2)
-  - FMDB/standard (2.2):
+  - FMDB/common (2.3)
+  - FMDB/standard (2.3):
     - FMDB/common
 
 DEPENDENCIES:
-  - DHJobController (from `https://github.com/davidahouse/DHJobController.git`)
   - DHMambaStore (from `https://github.com/davidahouse/DHMambaStore.git`)
 
 EXTERNAL SOURCES:
-  DHJobController:
-    :git: https://github.com/davidahouse/DHJobController.git
   DHMambaStore:
     :git: https://github.com/davidahouse/DHMambaStore.git
 
 SPEC CHECKSUMS:
-  DHJobController: 18374f6d5233152d670de27b19174d1082d4c055
   DHMambaStore: fe2581364353dfd21e084e31cb12ea3e36366289
-  FMDB: e0dd09464b4e1a1cd7fa51ea835ae821b5656865
+  FMDB: 31ec26773c7f7b7890a6038235a1f2bbd933a7cb
 
-COCOAPODS: 0.32.1
+COCOAPODS: 0.33.1

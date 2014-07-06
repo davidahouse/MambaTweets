@@ -17,6 +17,10 @@
 @property (nonatomic,assign) BOOL isRefreshing;
 @property (nonatomic,strong) RefreshTimeline *refreshJob;
 
+#pragma mark - Notification observers
+@property (nonatomic,strong) id summaryNotificationObserver;
+@property (nonatomic,strong) id iconFinishedNotificationObserver;
+
 #pragma mark - IBOutlet
 @property (weak, nonatomic) IBOutlet UIImageView *twitterIcon;
 @property (weak, nonatomic) IBOutlet UILabel *twitterHandle;
@@ -38,13 +42,13 @@
 {
     [super viewDidLoad];
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:(NSString *)kTimelineSummaryNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+    self.summaryNotificationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:(NSString *)kTimelineSummaryNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
         
         NSLog(@"got a summary notification!");
         [self reloadAccountData];
     }];
 
-    [[NSNotificationCenter defaultCenter] addObserverForName:(NSString *)kIconFinishedDownloadNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+    self.iconFinishedNotificationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:(NSString *)kIconFinishedDownloadNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
         
         [self refreshUI];
     }];
@@ -62,6 +66,14 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self.summaryNotificationObserver];
+    self.summaryNotificationObserver = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self.iconFinishedNotificationObserver];
+    self.iconFinishedNotificationObserver = nil;
+}
+
 #pragma mark - Private Methods
 - (void)reloadAccountData
 {
@@ -70,7 +82,6 @@
         self.account = accounts[0];
     }
     
-    // make sure UI updates are on the main thread
     [self refreshUI];
 }
 
@@ -113,7 +124,7 @@
     self.isRefreshing = YES;
     [self.refreshButton setTitle:@"Cancel" forState:UIControlStateNormal];
     [self.refreshActivity startAnimating];
-    self.refreshJob = [[RefreshTimeline alloc] init];
+    self.refreshJob = [RefreshTimeline startRefreshJob];
     __weak id weakself = self;
     [self.refreshJob setCompletionBlock:^{
         
@@ -121,7 +132,6 @@
             [weakself backgroundRefreshFinished];
         });
     }];
-    [self.refreshJob startJob];
 }
 
 - (void)backgroundRefreshFinished
