@@ -47,6 +47,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		25F637E2BD07E8A35C3ABD71 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		43C81B18532E3E45D8377D0B /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		9417EC9519060396000FC3C4 /* DownloadTwitterProfileIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadTwitterProfileIcon.h; path = Operation/DownloadTwitterProfileIcon.h; sourceTree = "<group>"; };
 		9417EC9619060396000FC3C4 /* DownloadTwitterProfileIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadTwitterProfileIcon.m; path = Operation/DownloadTwitterProfileIcon.m; sourceTree = "<group>"; };
 		945A521719086402007C6597 /* BackgroundLoadHistoricalTweets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundLoadHistoricalTweets.h; sourceTree = "<group>"; };
@@ -89,7 +91,6 @@
 		946F048E18FC54D100BC5D3C /* LoadTweetSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoadTweetSummary.m; path = Operation/LoadTweetSummary.m; sourceTree = "<group>"; };
 		94AAA1F818FB040F004FF8C3 /* ParseAndStoreTweet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParseAndStoreTweet.h; path = Operation/ParseAndStoreTweet.h; sourceTree = "<group>"; };
 		94AAA1F918FB040F004FF8C3 /* ParseAndStoreTweet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ParseAndStoreTweet.m; path = Operation/ParseAndStoreTweet.m; sourceTree = "<group>"; };
-		E0CFADD82B214972AA1588B7 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		FF17C809D5F74EE0803F4077 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -137,7 +138,7 @@
 				946AAC1D18F9C81100C10F86 /* MambaTweetsTests */,
 				946AABF718F9C81100C10F86 /* Frameworks */,
 				946AABF618F9C81100C10F86 /* Products */,
-				E0CFADD82B214972AA1588B7 /* Pods.xcconfig */,
+				9D63155B824ECF4BF1972867 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -257,6 +258,15 @@
 			name = Operation;
 			sourceTree = "<group>";
 		};
+		9D63155B824ECF4BF1972867 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				25F637E2BD07E8A35C3ABD71 /* Pods.debug.xcconfig */,
+				43C81B18532E3E45D8377D0B /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -364,7 +374,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B9DAC34DC7BE4B1FB5D56588 /* Check Pods Manifest.lock */ = {
@@ -524,7 +534,7 @@
 		};
 		946AAC2818F9C81100C10F86 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E0CFADD82B214972AA1588B7 /* Pods.xcconfig */;
+			baseConfigurationReference = 25F637E2BD07E8A35C3ABD71 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -538,7 +548,7 @@
 		};
 		946AAC2918F9C81100C10F86 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E0CFADD82B214972AA1588B7 /* Pods.xcconfig */;
+			baseConfigurationReference = 43C81B18532E3E45D8377D0B /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
